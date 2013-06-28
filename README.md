@@ -70,8 +70,9 @@ Versioning
 -----------
 
 At root and just integer:
-    /v1
-    /v2
+
+    /v1/...
+    /v2/...
 
 Pagination & partial response
 -----------------------------
