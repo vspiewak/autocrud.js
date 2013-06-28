@@ -60,11 +60,12 @@ try picking among these additional 5:
 
 Make messages returned in the payload as verbose as possible.
 
-    {"developerMessage" : "Verbose, plain language description of
-    the problem for the app developer with hints about how to fix
-    it.", "userMessage":"Pass this message on to the app user if
-    needed.", "errorCode" : 12345, "more info":
-    "http://dev.teachdogrest.com/errors/12345"}
+    {
+      "developerMessage" : "Verbose, plain language description of the problem for the app developer with hints about how to fix it.", 
+      "userMessage":"Pass this message on to the app user if needed.", 
+      "errorCode" : 12345, 
+      "more info": "http://dev.teachdogrest.com/errors/12345"
+     }
 
 Versioning
 -----------
