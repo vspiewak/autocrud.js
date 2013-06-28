@@ -1,3 +1,7 @@
+WORK IN PROGRESS
+================
+
+
 Guidelines
 ==========
 
@@ -16,15 +20,15 @@ Keep verbs out of your base URLs
 Use HTTP verbs to operate on the collections and elements.
 CRUD with POST, GET, PUT, and DELETE 
 
-Keep verbs out of your base URLs ...
+Keep verbs out of your base URLs ...    
 ... Use HTTP verbs to operate on the collections and elements
 
 				POST			GET				PUT						DELETE
 				(create)		(read)			(update)				(delete)
 
-	/dogs			a new dog		list dogs		bulk update dogs		delete all dogs
+	/dogs		a new dog		list dogs		bulk update dogs		delete all dogs
 
-	/dogs/1234		Error			show bo			update bo or error		delete bo
+	/dogs/1234	Error			show bo			update bo or error		delete bo
 
 In summary, an intuitive API uses plural rather than singular nouns, and concrete rather than abstract names.
 
@@ -35,10 +39,6 @@ Simplify associations - sweep complexity under the ‘?’
 ------------------------------------------------------
 
     GET /owners/5678/dogs
-    POST /owners/5678/dogs
-
-is preferable to:
-
     GET /dogs?color=red&state=running&location=park
 
 Handling errors
@@ -69,13 +69,15 @@ Make messages returned in the payload as verbose as possible.
 Versioning
 -----------
 
-At root and just integer /v1, /v2
+At root and just integer:
+    /v1
+    /v2
 
 Pagination & partial response
---------------------------------
+-----------------------------
 
 Add optional fields in a comma-delimited list:
-    
+
     /dogs?fields=name,color,location
 
 Make it easy for developers to paginate objects in a database:
