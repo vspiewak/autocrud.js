@@ -6,6 +6,9 @@ curl -v -H "Content-type: application/json" -X PUT -d '[ { "author": "john doe",
 curl -v -X DELETE http://localhost:3000/api/posts/3
 curl -v -X DELETE http://localhost:3000/api/posts
 
+curl -v -H "Content-type: application/json" -X PUT -d '[ { "name": "lassie", "colors": [ "yellow", "grey" ] }, { "name": "moon moon", "colors": [ "white" ] } ]' http://localhost:3000/api/dogs
+
+
 */
 var DATAS_FILE = "datas.json";
 
@@ -106,6 +109,22 @@ app.get('/api/:model/:id', function(req, res) {
     var id = req.params.id;
     var ret = datas[model];
     if(datas[model][id]) res.send(ret[id]);
+
+    res.status(404).send({ message: 'Not found' });
+});
+
+/*
+ * GET - an element association
+ */
+app.get('/api/:model/:id/:association', function(req, res) {
+
+    var model = req.params.model;
+    var id = req.params.id;
+    var association = req.params.association;
+    var obj = datas[model][id];
+
+    if(obj && obj[association]) 
+        res.send(obj[association]);
 
     res.status(404).send({ message: 'Not found' });
 });
