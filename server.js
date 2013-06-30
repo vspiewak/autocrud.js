@@ -69,6 +69,10 @@ app.get('/api/load', function(req, res) {
 });
 */
 
+app.get('/api', function(req, res) {
+    res.send(datas);
+});
+
 /*
  * GET - list of datas
  */
@@ -80,10 +84,6 @@ app.get('/api/:model', function(req, res) {
    
     res.status(404).send({ message: 'Not found' });
    
-});
-
-app.get('/api', function(req, res) {
-    res.send(datas);
 });
 
 /*
@@ -136,6 +136,23 @@ app.put('/api/:model/:id', function(req, res) {
 });
 
 /*
+ * DELETE - delete all elements
+ */
+app.delete('/api/:model', function(req, res) {
+   
+    var model = req.params.model;
+    var ret = datas[model];
+
+    if(ret) {
+        delete datas[model];
+        res.send(ret);
+    }
+
+    res.status(404).send({ message: 'Not Found' });
+});
+
+
+/*
  * DELETE - delete an element
  */
 app.delete('/api/:model/:id', function(req, res) {
@@ -152,6 +169,7 @@ app.delete('/api/:model/:id', function(req, res) {
 
     res.status(404).send({ message: 'Not Found' });
 });
+
 
 app.listen(3000);
 console.log('Listening on port 3000...');
