@@ -129,6 +129,13 @@ function filterPagination(req, values) {
     return values;
 }
 
+function filterResponse(req, values) {
+    values = filterQuery(req, values);
+    values = filterPagination(req, values);
+    values = filterFields(req, values);
+    return values;
+}
+
 
 /*
  * GET - retrieve all values api
@@ -150,10 +157,7 @@ app.get('/api/:model', function(req, res) {
             values.push(models[key]);
         }
 
-        values = filterQuery(req, values);
-        values = filterPagination(req, values);
-        values = filterFields(req, values);
-        res.send(values);   
+        res.send(filterResponse(req, values));   
     
     } 
     res.status(404).send({ message: 'Not found' });
