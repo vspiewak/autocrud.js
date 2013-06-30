@@ -2,7 +2,9 @@
 
 curl -v -H "Content-type: application/json" -X POST -d ' { "author": "john doe","content": "hello :)" }'  http://localhost:3000/api/posts
 curl -v -H "Content-type: application/json" -X PUT -d ' { "author": "john doe", "content": "hello everyponies :)" }' http://localhost:3000/api/posts/3
+curl -v -H "Content-type: application/json" -X PUT -d '[ { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" } ]' http://localhost:3000/api/posts
 curl -v -X DELETE http://localhost:3000/api/posts/3
+curl -v -X DELETE http://localhost:3000/api/posts
 
 */
 var DATAS_FILE = "datas.json";
@@ -116,6 +118,26 @@ app.post('/api/:model', function(req, res) {
     res.send(obj);
 
 });
+
+/*
+ * PUT - bulk update all elements (replace)
+ */
+app.put('/api/:model', function(req, res) {
+
+    var model = req.params.model;
+    var objects = req.body;
+
+    datas[model] = {};
+
+    objects.forEach(function(item) {
+        item.id = seq;
+        seq++;
+        datas[model][item.id] = item;
+    });
+
+    res.send(datas[model]);
+});
+
 
 /*
  * PUT - update an element (replace, no field update)
