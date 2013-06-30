@@ -8,6 +8,9 @@ curl -v -X DELETE http://localhost:3000/api/posts
 
 curl -v -H "Content-type: application/json" -X PUT -d '[ { "name": "lassie", "colors": [ "yellow", "grey" ] }, { "name": "moon moon", "colors": [ "white" ] } ]' http://localhost:3000/api/dogs
 
+http://localhost:3000/api/posts/1/?fields=author,content
+http://localhost:3000/api/posts/?fields=content,author
+http://localhost:3000/api/posts/?author=john doe&fields=id,content
 
 */
 var DATAS_FILE = "datas.json";
@@ -45,41 +48,48 @@ app.configure(function () {
 
 app.use(express.static(__dirname));
 
-/*
-app.get('/api/save', function(req, res) {
 
-    var serialized = JSON.stringify({ "seq": seq, "datas": datas });
-    fs.writeFileSync(DATAS_FILE, serialized, 'utf8', function(err) {
-        if(err) {
-            res.status(500).send({ message: "Error during persistence: " + err });
-        } else {
-            res.send({ message: "objects persisted" });
-        }
-    }); 
-    
-});
-
-
-app.get('/api/load', function(req, res) {
-
-    fs.readFileSync(DATAS_FILE, 'utf8', function (err, data) {
-      if (err) {
-        res.status(500).send({ message: "Error during persistence: " + err });
-      }
-
-      data = JSON.parse(data);
-      seq = data.seq;
-      res.send({ message: "object persisted" });
-
+function trimObjectField(item, fields){
+    var obj = {};
+    fields.forEach(function(field) {
+        obj[field] = item[field];
     });
-});
-*/
+    return obj;
+}
 
-function filterWithQuery(req, values) {
+
+function filterFields(req, values) {
+
+    var queryObject = url.parse(req.url,true).query;
+    var keys = Object.keys(queryObject);
+    var fields = (queryObject.fields && queryObject.fields.split(",")) || [];
+    
+    if(fields.length > 0) {
+    
+        if(!(values instanceof Array)) {
+            values = trimObjectField(values, fields);
+        } else {
+            var ret = [];
+            values.forEach(function(item) {      
+                ret.push(trimObjectField(item, fields));
+            });
+            values = ret;
+        } 
+    }
+
+    return values;
+}
+
+
+function filterQuery(req, values) {
 
     var queryObject = url.parse(req.url,true).query;
     var keys = Object.keys(queryObject);
     var ret = values.slice();
+
+    //fields is dedicated for partials response
+    var idx = keys.indexOf("fields");
+    if(idx != -1) keys.splice(idx, 1);
 
     values.forEach(function(value) {
         keys.forEach(function(key) {
@@ -91,6 +101,8 @@ function filterWithQuery(req, values) {
 
     return ret;
 }
+
+
 /*
  * GET - retrieve all values api
  */ 
@@ -110,7 +122,10 @@ app.get('/api/:model', function(req, res) {
         for(key in models) { 
             values.push(models[key]);
         }
-        res.send(filterWithQuery(req, values));   
+
+        values = filterQuery(req, values);
+        values = filterFields(req, values);
+        res.send(values);   
     
     } 
     res.status(404).send({ message: 'Not found' });
@@ -124,9 +139,12 @@ app.get('/api/:model/:id', function(req, res) {
 
     var model = req.params.model;
     var id = req.params.id;
-    var ret = datas[model];
-    if(datas[model][id]) res.send(ret[id]);
+    var value = datas[model][id];
 
+    if(value) {
+        var value = filterFields(req, value);
+        res.send(value);
+    } 
     res.status(404).send({ message: 'Not found' });
 });
 
