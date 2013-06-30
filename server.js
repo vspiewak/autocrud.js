@@ -110,7 +110,6 @@ function filterQuery(req, values) {
 
 
 function filterPagination(req, values) {
-
     var query = url.parse(req.url,true).query;
     // if args set
     if(query.limit && query.offset) {
@@ -121,10 +120,11 @@ function filterPagination(req, values) {
         values.splice(0, offset);
         // remove after
         values.splice(limit, values.length - limit);
-        // return page
+        // build result
         var page = {};
         page.content = values;
         page.next = length - offset - limit;
+        values = page;
     }
     return values;
 }
@@ -169,10 +169,7 @@ app.get('/api/:model/:id', function(req, res) {
     var id = req.params.id;
     var value = datas[model][id];
 
-    if(value) {
-        var value = filterFields(req, value);
-        res.send(value);
-    } 
+    if(value) res.send(value);
     res.status(404).send({ message: 'Not found' });
 });
 
