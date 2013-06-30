@@ -35,8 +35,9 @@ var datas = {
 
 
 var express = require('express')
+    , app = express()
     , fs = require('fs')
-    , app = express();
+    , url = require('url');
 
 app.configure(function () {
     app.use(express.bodyParser());
@@ -74,6 +75,22 @@ app.get('/api/load', function(req, res) {
 });
 */
 
+function filterWithQuery(req, values) {
+
+    var queryObject = url.parse(req.url,true).query;
+    var keys = Object.keys(queryObject);
+    var ret = values.slice();
+
+    values.forEach(function(value) {
+        keys.forEach(function(key) {
+            if(value[key] != queryObject[key]) {
+                ret.pop(value);
+            }
+        });
+    });
+
+    return ret;
+}
 /*
  * GET - retrieve all values api
  */ 
@@ -93,7 +110,7 @@ app.get('/api/:model', function(req, res) {
         for(key in models) { 
             values.push(models[key]);
         }
-        res.send(values);   
+        res.send(filterWithQuery(req, values));   
     
     } 
     res.status(404).send({ message: 'Not found' });
