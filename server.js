@@ -156,9 +156,7 @@ app.get('/api/:model', function(req, res) {
         for(key in models) { 
             values.push(models[key]);
         }
-
-        res.send(filterResponse(req, values));   
-    
+        res.send(filterResponse(req, values));
     } 
     res.status(404).send({ message: 'Not found' });
    
