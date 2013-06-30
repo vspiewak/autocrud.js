@@ -110,12 +110,21 @@ function filterQuery(req, values) {
 
 
 function filterPagination(req, values) {
+
     var query = url.parse(req.url,true).query;
+    // if args set
     if(query.limit && query.offset) {
         var limit = parseInt(query.limit);    
         var offset = parseInt(query.offset);
+        var length = values.length;
+        // remove before
         values.splice(0, offset);
+        // remove after
         values.splice(limit, values.length - limit);
+        // return page
+        var page = {};
+        page.content = values;
+        page.next = length - offset - limit;
     }
     return values;
 }
