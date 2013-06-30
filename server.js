@@ -71,6 +71,9 @@ app.get('/api/load', function(req, res) {
 });
 */
 
+/*
+ * GET - retrieve all values api
+ */ 
 app.get('/api', function(req, res) {
     res.send(datas);
 });
@@ -79,11 +82,17 @@ app.get('/api', function(req, res) {
  * GET - list of datas
  */
 app.get('/api/:model', function(req, res) {
-    var model = req.params.model;
-    var models = datas[model];
 
-    if(models) res.send(models);   
-   
+    var models = datas[req.params.model];
+
+    if(models) {
+        var values = [];
+        for(key in models) { 
+            values.push(models[key]);
+        }
+        res.send(values);   
+    
+    } 
     res.status(404).send({ message: 'Not found' });
    
 });
