@@ -3,6 +3,7 @@
 curl -v -H "Content-type: application/json" -X POST -d ' { "author": "john doe","content": "hello :)" }'  http://localhost:3000/api/posts
 curl -v -H "Content-type: application/json" -X PUT -d ' { "author": "john doe", "content": "hello everyponies :)" }' http://localhost:3000/api/posts/3
 curl -v -H "Content-type: application/json" -X PUT -d '[ { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" } ]' http://localhost:3000/api/posts
+curl -v -H "Content-type: application/json" -X PUT -d '[ { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" } ]' http://localhost:3000/api/posts
 curl -v -X DELETE http://localhost:3000/api/posts/3
 curl -v -X DELETE http://localhost:3000/api/posts
 
@@ -11,6 +12,7 @@ curl -v -H "Content-type: application/json" -X PUT -d '[ { "name": "lassie", "co
 http://localhost:3000/api/posts/1/?fields=author,content
 http://localhost:3000/api/posts/?fields=content,author
 http://localhost:3000/api/posts/?author=john doe&fields=id,content
+http://localhost:3000/api/posts?offset=3&limit=6
 
 */
 var DATAS_FILE = "datas.json";
@@ -87,8 +89,12 @@ function filterQuery(req, values) {
     var keys = Object.keys(queryObject);
     var ret = values.slice();
 
-    //fields is dedicated for partials response
+    //fields is dedicated for partials response & pagination
     var idx = keys.indexOf("fields");
+    if(idx != -1) keys.splice(idx, 1);
+    idx = keys.indexOf("offset");
+    if(idx != -1) keys.splice(idx, 1);
+    idx = keys.indexOf("limit");
     if(idx != -1) keys.splice(idx, 1);
 
     values.forEach(function(value) {
@@ -100,6 +106,18 @@ function filterQuery(req, values) {
     });
 
     return ret;
+}
+
+
+function filterPagination(req, values) {
+    var query = url.parse(req.url,true).query;
+    if(query.limit && query.offset) {
+        var limit = parseInt(query.limit);    
+        var offset = parseInt(query.offset);
+        values.splice(0, offset);
+        values.splice(limit, values.length - limit);
+    }
+    return values;
 }
 
 
@@ -124,6 +142,7 @@ app.get('/api/:model', function(req, res) {
         }
 
         values = filterQuery(req, values);
+        values = filterPagination(req, values);
         values = filterFields(req, values);
         res.send(values);   
     
