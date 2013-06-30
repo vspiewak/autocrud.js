@@ -1,6 +1,23 @@
 WORK IN PROGRESS
 ================
 
+Autocrud.JS
+===========
+
+        curl -v -H "Content-type: application/json" -X POST -d ' { "author": "john doe","content": "hello :)" }'  http://localhost:3000/api/posts
+        curl -v -H "Content-type: application/json" -X PUT -d ' { "author": "john doe", "content": "hello everyponies :)" }' http://localhost:3000/api/posts/3
+        curl -v -H "Content-type: application/json" -X PUT -d '[ { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" } ]' http://localhost:3000/api/posts
+        curl -v -H "Content-type: application/json" -X PUT -d '[ { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" } ]' http://localhost:3000/api/posts
+        curl -v -X DELETE http://localhost:3000/api/posts/3
+        curl -v -X DELETE http://localhost:3000/api/posts
+
+        curl -v -H "Content-type: application/json" -X PUT -d '[ { "name": "lassie", "colors": [ "yellow", "grey" ] }, { "name": "moon moon", "colors": [ "white" ] } ]' http://localhost:3000/api/dogs
+
+        http://localhost:3000/api/posts/1/?fields=author,content
+        http://localhost:3000/api/posts/?fields=content,author
+        http://localhost:3000/api/posts/?author=john doe&fields=id,content
+        http://localhost:3000/api/posts?offset=3&limit=6
+
 
 Guidelines
 ==========

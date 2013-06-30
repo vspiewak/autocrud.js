@@ -1,20 +1,3 @@
-/* 
-
-curl -v -H "Content-type: application/json" -X POST -d ' { "author": "john doe","content": "hello :)" }'  http://localhost:3000/api/posts
-curl -v -H "Content-type: application/json" -X PUT -d ' { "author": "john doe", "content": "hello everyponies :)" }' http://localhost:3000/api/posts/3
-curl -v -H "Content-type: application/json" -X PUT -d '[ { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" } ]' http://localhost:3000/api/posts
-curl -v -H "Content-type: application/json" -X PUT -d '[ { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" }, { "author": "john doe", "content": "hello everyponies :)" } ]' http://localhost:3000/api/posts
-curl -v -X DELETE http://localhost:3000/api/posts/3
-curl -v -X DELETE http://localhost:3000/api/posts
-
-curl -v -H "Content-type: application/json" -X PUT -d '[ { "name": "lassie", "colors": [ "yellow", "grey" ] }, { "name": "moon moon", "colors": [ "white" ] } ]' http://localhost:3000/api/dogs
-
-http://localhost:3000/api/posts/1/?fields=author,content
-http://localhost:3000/api/posts/?fields=content,author
-http://localhost:3000/api/posts/?author=john doe&fields=id,content
-http://localhost:3000/api/posts?offset=3&limit=6
-
-*/
 var DATAS_FILE = "datas.json";
 
 var seq = 3;
@@ -37,8 +20,6 @@ var datas = {
     }
 };
 
-
-
 var express = require('express')
     , app = express()
     , fs = require('fs')
@@ -49,7 +30,6 @@ app.configure(function () {
 });
 
 app.use(express.static(__dirname));
-
 
 function trimObjectField(item, fields){
     var obj = {};
@@ -82,7 +62,6 @@ function filterFields(req, values) {
     return values;
 }
 
-
 function filterQuery(req, values) {
 
     var queryObject = url.parse(req.url,true).query;
@@ -107,7 +86,6 @@ function filterQuery(req, values) {
 
     return ret;
 }
-
 
 function filterPagination(req, values) {
     var query = url.parse(req.url,true).query;
@@ -135,7 +113,6 @@ function filterResponse(req, values) {
     values = filterFields(req, values);
     return values;
 }
-
 
 /*
  * GET - retrieve all values api
@@ -228,7 +205,6 @@ app.put('/api/:model', function(req, res) {
     res.send(datas[model]);
 });
 
-
 /*
  * PUT - update an element (replace, no field update)
  */
@@ -263,7 +239,6 @@ app.delete('/api/:model', function(req, res) {
     res.status(404).send({ message: 'Not Found' });
 });
 
-
 /*
  * DELETE - delete an element
  */
@@ -281,7 +256,6 @@ app.delete('/api/:model/:id', function(req, res) {
 
     res.status(404).send({ message: 'Not Found' });
 });
-
 
 app.listen(3000);
 console.log('Listening on port 3000...');
